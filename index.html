@@ -86,22 +86,123 @@
       <button>Trigger a Global Error</button>
     </section>
   </main>
-
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+  window.TrackJS && TrackJS.install({ 
+    token: "4119cdeae62b4e149d029e7966f62cb0"
+    // for more configuration options, see https://docs.trackjs.com
+  });
+  </script>
+  <script>
+    class NumberSyntaxError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "NumberSyntaxError";
+      }
+    }
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
+
       let output = document.querySelector('output');
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        if (Number(firstNum) && !isNaN(firstNum) && Number(secondNum) && !isNaN(secondNum)) {
+          output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+        } else {
+          throw new NumberSyntaxError("Error with the number(s)!");
+        }
+      } catch(err) {
+        console.log(err);
+      } finally {
+        console.log("Testing finally for after calculator form filled");
+      }
+
     });
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+    let errorBtns = document.querySelectorAll('#error-btns > button');
 
     // Start your code here
-    // You may move this JS to another file if you wish
+    errorBtns[0].addEventListener('click', () => {
+      return console.log('Console Log Demo');
+    });
+    errorBtns[1].addEventListener('click', () => {
+      try { 
+        console.error('Commented out code');
+      } catch(error) {
+        console.error('Console Error Demo');
+        console.error(error);
+      }
+    });
+    errorBtns[2].addEventListener('click', () => {
+      console.count('Count Button');
+    });
+    errorBtns[3].addEventListener('click', () => {
+      console.warn('Console Warn Button');
+    });
+    errorBtns[4].addEventListener('click', () => {
+      const x = 3; const y = 4;
+      const reason = 'x is expected to equal y'
+      console.assert(x === y, {x,y,reason});
+    });
+    errorBtns[5].addEventListener('click', () => {
+      console.clear();
+    });
+    errorBtns[6].addEventListener('click', () => {
+      console.dir(errorBtns[6]);
+    });
+    errorBtns[7].addEventListener('click', () => {
+      console.dirxml(errorBtns[7]);
+    });
+  
+    errorBtns[8].addEventListener('click',() => {
+      console.group();
+    });
+    errorBtns[9].addEventListener('click', () => {
+      console.groupEnd();
+    });
+    errorBtns[10].addEventListener('click', () => {
+      const holidays = [
+        {
+          Name: 'Thanksgiving',
+          Date: '11/24/2022',
+        },
+        {
+          Name: 'Christmas',
+          Date: '12/25/2022',
+        },
+        {
+          Name: 'New Years',
+          Date: '1/1/2023',
+        }
+      
+      
+      ]
+      console.table(holidays);
+    });
+    errorBtns[11].addEventListener('click', () => {
+      console.time();
+    });
+    errorBtns[12].addEventListener('click', () => {
+      console.timeEnd();
+    });
+    errorBtns[13].addEventListener('click', consoleTraceBtn = () => {
+      
+      const deep = () => { deeper(); };
+      const deeper = () => { evendeeper(); };
+      const evendeeper = () => { deepest(); };
+      const deepest = () => { console.trace(); };
+      deep();
+     
+    });
+    errorBtns[14].addEventListener('click', () => {
+      testBadCode + 1;
+    });
+    window.addEventListener('error', (err) => {
+      console.log("An error has occured! View here: ");
+    });
   </script>
 </body>
 
